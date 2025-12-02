@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign In</title>
+  </head>
+  <body>
+    <h1>Sign In</h1>
+
+    <% if (locals.errors && locals.errors.length > 0) { %>
+      <ul style="color: red;">
+        <% locals.errors.forEach(function(error) { %>
+          <li><%= error.msg || error %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <form action="/account/signin" method="POST">
+      <div>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value="<%= (locals.oldInput && locals.oldInput.email) || '' %>"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+        />
+      </div>
+
+      <button type="submit">Sign in</button>
+    </form>
+
+    <p>
+      Don't have an account?
+      <a href="/account/signup">Sign up</a>
+    </p>
+  </body>
+</html>
