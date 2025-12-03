@@ -27,45 +27,39 @@ const confirmPassword = [
     })
   ];
 
-// Creates a validation chain for a new author, including multiple fields.
+// Helper to handle validation errors with redirect-after-POST (PRG pattern).
+const handleValidationErrorsWithRedirect = (viewPath) => (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('validationErrors', JSON.stringify(errors.array()));
+    req.flash('oldInput', req.body);
+    return res.redirect(viewPath);
+  }
+  return next();
+};
+
+// Creates a validation chain for signup, including multiple fields.
 const signupValidation = [
-  ...createRequiredStringValidation('firstName', 'first name is required'),
-  ...createRequiredStringValidation('lastName', 'last name is required'),
-  ...createRequiredStringValidation('email', ' email is required'),
+  ...createRequiredStringValidation('userName', 'user name is required'),
+  ...createRequiredStringValidation('email', 'email is required'),
   body('email').isEmail().withMessage('Invalid email format'),
   ...passwordValidationChain,
   ...confirmPassword
 ];
 
-const handleValidationSignupErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.render('account/signup', {           // ← fix
-      errors: errors.array(),
-      oldInput: req.body,                           // ← match what views expect
-    });
-  }
-  return next();
-};
+const handleValidationSignupErrors = handleValidationErrorsWithRedirect('/signup');
 
 const signInValidation = [
-  ...createRequiredStringValidation('email', ' email is required'),
-      body('email').isEmail().withMessage('Invalid email format'),
+  ...createRequiredStringValidation('email', 'email is required'),
+  body('email').isEmail().withMessage('Invalid email format'),
   ...createRequiredStringValidation('password', 'password is required'),
 ];
-const handleValidationSignInErrors = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.render('account/signin', {           // ← fix
-      errors: errors.array(),
-      oldInput: req.body,                           // ← match what views expect
-    });
-  }
-  return next();
+
+const handleValidationSignInErrors = handleValidationErrorsWithRedirect('/signin');
+
+module.exports = {
+  signupValidation,
+  handleValidationSignupErrors,
+  signInValidation,
+  handleValidationSignInErrors,
 };
-  module.exports = {
-    signupValidation,
-    handleValidationSignupErrors,
-    signInValidation,
-    handleValidationSignInErrors
-}

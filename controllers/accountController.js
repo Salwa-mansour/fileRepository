@@ -2,15 +2,22 @@
 const path = require('path');
 const db = require('../data/queries'); // <- uses findByEmail, findUserById, comparePassword, createUser
 
-// GET /account/signup
+// GET /signup
 exports.signupGet = (req, res) => {
+  const [oldInput] = req.flash('oldInput');
+  const [validationErrorsRaw] = req.flash('validationErrors');
+  const validationErrors = validationErrorsRaw ? JSON.parse(validationErrorsRaw) : [];
+
+  const flashedErrors = req.flash('error') || [];
+  const errors = [...flashedErrors, ...validationErrors];
+
   res.render(path.join('account', 'signup'), {
-    errors: req.flash('error') || [],
-    oldInput: req.body || {},
+    errors,
+    oldInput: oldInput || {},
   });
 };
 
-// POST /account/signup
+// POST /signup
 exports.signupAccount = async (req, res, next) => {
   const { userName, email, password } = req.body;
 
@@ -20,7 +27,8 @@ exports.signupAccount = async (req, res, next) => {
 
     if (existingUser) {
       req.flash('error', 'Email is already registered');
-      return res.redirect('/account/signup');
+      req.flash('oldInput', { userName, email });
+      return res.redirect('/signup');
     }
 
     // create user via queries.js (you implement createUser there)
@@ -28,32 +36,44 @@ exports.signupAccount = async (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-      return res.redirect('/account/dashboard');
+      return res.redirect('/dashboard');
     });
   } catch (err) {
     return next(err);
   }
 };
 
-// GET /account/signin
+// GET /signin
 exports.signinGet = (req, res) => {
-    res.render(path.join('account', 'signin'), {
-      errors: req.flash('error') || [],
-      oldInput: { email: req.flash('oldEmail')[0] || '' },
-    });
-  };
+  const [oldInput] = req.flash('oldInput');
+  const [validationErrorsRaw] = req.flash('validationErrors');
+  const validationErrors = validationErrorsRaw ? JSON.parse(validationErrorsRaw) : [];
+
+  const flashedErrors = req.flash('error') || [];
+  const errors = [...flashedErrors, ...validationErrors];
+
+  const email =
+    (oldInput && oldInput.email) ||
+    req.flash('oldEmail')[0] ||
+    '';
+
+  res.render(path.join('account', 'signin'), {
+    errors,
+    oldInput: { email },
+  });
+};
 
 // GET /account/logout
 exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    res.redirect('/account/signin');
+    res.redirect('/signin');
   });
 };
 
-// GET /account/dashboard
+// GET /dashboard
 exports.dashboardGet = (req, res) => {
-  res.render('dashboard', {
+  res.render(path.join('account', 'dashboard'), {
     user: req.user,
   });
 };
@@ -62,7 +82,7 @@ exports.dashboardGet = (req, res) => {
 exports.setMember = async (req, res, next) => {
   try {
     // for now, just redirect; you can add a db.setMember(userId) in queries.js later
-    res.redirect('/account/dashboard');
+    res.redirect('/dashboard');
   } catch (err) {
     next(err);
   }

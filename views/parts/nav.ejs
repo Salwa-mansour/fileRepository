@@ -1,0 +1,24 @@
+<%
+  const currentUser =
+    (typeof user !== 'undefined' && user) ||
+    (locals && locals.user) ||
+    null;
+%>
+
+<nav style="display: flex; gap: 1rem; align-items: center; padding: 0.5rem 1rem; border-bottom: 1px solid #ccc;">
+  <span>
+    Welcome,
+    <strong><%= (currentUser && currentUser.userName) || 'Guest' %></strong>
+  </span>
+
+  <% if (currentUser) { %>
+    <a href="/dashboard">Dashboard</a>
+    <form action="/logout" method="POST" style="display: inline;">
+      <button type="submit">Logout</button>
+    </form>
+  <% } else { %>
+    <a href="/signin">Sign in</a>
+    <a href="/signup">Sign up</a>
+  <% } %>
+</nav>
+

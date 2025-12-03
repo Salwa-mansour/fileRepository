@@ -5,7 +5,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 
 // ✅ load env vars from config.env
-dotenv.config({ path: "config.env" });
+dotenv.config();
 
 // --------------
 const session = require('express-session');
@@ -28,12 +28,16 @@ app.use(express.json());
 //------------------
 
 // Session middleware configuration
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  console.warn('[session] SESSION_SECRET missing, falling back to unsafe dev secret.');
+}
 app.use(session({
     store: new pgSession({
       conString: process.env.DATABASE_URL,
       tableName: 'session', // Name of the table storing session data
     }),
-    secret: process.env.SESSION_SECRET, // Use a secret from an environment variable
+    secret: sessionSecret ?? 'dev-only-secret-change-me', // Use a secret from an environment variable
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
@@ -57,7 +61,30 @@ app.use('/{*splat}', async (req, res) => {
     //res.sendFile(path.join(__dirname,'views','404.html'))
       res.render("404", { message: `error`});
   });
- 
+ // ------ global error handling middleware
+ app.use((err, req, res, next) => {
+  console.error(err);
+
+  const status = err.status || 500;
+  res.status(status);
+
+  if (req.accepts('html')) {
+    return res.render('error', {
+      message: err.message || 'Something went wrong',
+      status,
+    });
+  }
+
+  if (req.accepts('json')) {
+    return res.json({
+      error: err.message || 'Something went wrong',
+      status,
+    });
+  }
+
+  return res.type('txt').send(err.message || 'Something went wrong');
+});
+//----------------
  const PORT = process.env.urlPORT || 3000;
  app.listen(PORT, (error) => {
    if (error) {

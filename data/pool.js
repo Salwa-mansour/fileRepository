@@ -4,7 +4,7 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
 
-dotenv.config({ path: 'config.env' });
+dotenv.config();
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({

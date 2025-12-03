@@ -6,23 +6,24 @@
   </head>
   <body>
     <h1>Sign Up</h1>
+    <%- include('../parts/nav') %>
 
-    <% if (locals.errors && locals.errors.length > 0) { %>
+    <% if (errors && errors.length > 0) { %>
       <ul style="color: red;">
-        <% locals.errors.forEach(function(error) { %>
+        <% errors.forEach(function(error) { %>
           <li><%= error.msg || error %></li>
         <% }) %>
       </ul>
     <% } %>
 
-    <form action="/account/signup" method="POST">
+    <form action="/signup" method="POST">
       <div>
         <label for="userName">Username</label>
         <input
           type="text"
           id="userName"
           name="userName"
-          value="<%= (locals.oldInput && locals.oldInput.userName) || '' %>"
+          value="<%= (oldInput && oldInput.userName) || '' %>"
           required
         />
       </div>
@@ -33,7 +34,7 @@
           type="email"
           id="email"
           name="email"
-          value="<%= (locals.oldInput && locals.oldInput.email) || '' %>"
+          value="<%= (oldInput && oldInput.email) || '' %>"
           required
         />
       </div>
@@ -48,12 +49,22 @@
         />
       </div>
 
+      <div>
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          required
+        />
+      </div>
+
       <button type="submit">Create account</button>
     </form>
 
     <p>
       Already have an account?
-      <a href="/account/signin">Sign in</a>
+      <a href="/signin">Sign in</a>
     </p>
   </body>
 </html>

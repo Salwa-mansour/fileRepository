@@ -1,11 +1,10 @@
 const express = require('express');
-const path = require('path');
 
 const accountRouter = express.Router();
 
-const accountController = require(path.resolve('controllers', 'accountController'));
-const validationMiddleware = require(path.resolve('middleware', 'validation'));
-const auth = require(path.resolve('middleware', 'auth'));
+const accountController = require('../controllers/accountController');
+const validationMiddleware = require('../middleware/validation');
+const auth = require('../middleware/auth');
 
 accountRouter.route('/signup')
   .get(accountController.signupGet)
@@ -21,10 +20,10 @@ accountRouter.route('/signin')
     validationMiddleware.signInValidation,
     validationMiddleware.handleValidationSignInErrors,
     auth.login,
-    (req, res) => res.redirect('/'),
+    (req, res) => res.redirect('/dashboard'),
   );
 
-accountRouter.get('/logout', accountController.logout);
+accountRouter.post('/logout', accountController.logout);
 
 accountRouter.get('/dashboard', auth.ensureAuthenticated, accountController.dashboardGet);
 

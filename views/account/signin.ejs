@@ -7,22 +7,22 @@
   <body>
     <h1>Sign In</h1>
 
-    <% if (locals.errors && locals.errors.length > 0) { %>
+    <% if (errors && errors.length > 0) { %>
       <ul style="color: red;">
-        <% locals.errors.forEach(function(error) { %>
+        <% errors.forEach(function(error) { %>
           <li><%= error.msg || error %></li>
         <% }) %>
       </ul>
     <% } %>
 
-    <form action="/account/signin" method="POST">
+    <form action="/signin" method="POST">
       <div>
         <label for="email">Email</label>
         <input
           type="email"
           id="email"
           name="email"
-          value="<%= (locals.oldInput && locals.oldInput.email) || '' %>"
+          value="<%= (oldInput && oldInput.email) || '' %>"
           required
         />
       </div>
@@ -42,7 +42,7 @@
 
     <p>
       Don't have an account?
-      <a href="/account/signup">Sign up</a>
+      <a href="/signup">Sign up</a>
     </p>
   </body>
 </html>
