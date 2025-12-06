@@ -2,7 +2,7 @@
 const path = require('path');
 const db = require('../data/queries'); // <- uses findByEmail, findUserById, comparePassword, createUser
 
-// GET /account/signup
+// GET /signup
 exports.signupGet = (req, res) => {
   res.render(path.join('account', 'signup'), {
     errors: req.flash('error') || [],
@@ -10,7 +10,7 @@ exports.signupGet = (req, res) => {
   });
 };
 
-// POST /account/signup
+// POST /signup
 exports.signupAccount = async (req, res, next) => {
   const { userName, email, password } = req.body;
 
@@ -20,7 +20,7 @@ exports.signupAccount = async (req, res, next) => {
 
     if (existingUser) {
       req.flash('error', 'Email is already registered');
-      return res.redirect('/account/signup');
+      return res.redirect('/signup');
     }
 
     // create user via queries.js (you implement createUser there)
@@ -28,14 +28,14 @@ exports.signupAccount = async (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-      return res.redirect('/account/dashboard');
+      return res.redirect('/dashboard');
     });
   } catch (err) {
     return next(err);
   }
 };
 
-// GET /account/signin
+// GET /signin
 exports.signinGet = (req, res) => {
     res.render(path.join('account', 'signin'), {
       errors: req.flash('error') || [],
@@ -47,13 +47,13 @@ exports.signinGet = (req, res) => {
 exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    res.redirect('/account/signin');
+    res.redirect('/signin');
   });
 };
 
-// GET /account/dashboard
+// GET /dashboard
 exports.dashboardGet = (req, res) => {
-  res.render('dashboard', {
+  res.render('account/dashboard', {
     user: req.user,
   });
 };
@@ -62,7 +62,7 @@ exports.dashboardGet = (req, res) => {
 exports.setMember = async (req, res, next) => {
   try {
     // for now, just redirect; you can add a db.setMember(userId) in queries.js later
-    res.redirect('/account/dashboard');
+    res.redirect('/dashboard');
   } catch (err) {
     next(err);
   }

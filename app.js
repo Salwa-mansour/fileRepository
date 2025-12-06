@@ -5,7 +5,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 
 // ✅ load env vars from config.env
-dotenv.config({ path: "config.env" });
+dotenv.config();
 
 // --------------
 const session = require('express-session');
@@ -28,12 +28,16 @@ app.use(express.json());
 //------------------
 
 // Session middleware configuration
+const sessionSecret = process.env.SESSION_SECRET;
+if (!sessionSecret) {
+  console.warn('[session] SESSION_SECRET missing, falling back to unsafe dev secret.');
+}
 app.use(session({
     store: new pgSession({
       conString: process.env.DATABASE_URL,
       tableName: 'session', // Name of the table storing session data
     }),
-    secret: process.env.SESSION_SECRET, // Use a secret from an environment variable
+    secret: sessionSecret ?? 'dev-only-secret-change-me', // Use a secret from an environment variable
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
@@ -46,7 +50,16 @@ app.use(session({
   
   // Load Passport configuration
   require('./middleware/passportConfig')(passport);
-  
+
+// Make user data available to all templates via res.locals
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.user = req.user;
+  next();
+});
+
+// ... rest of your routes ...
+
 //routes--------------
 
 app.use('/',require(path.join(__dirname,'routs','accountRouter')));

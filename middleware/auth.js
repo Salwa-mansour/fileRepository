@@ -11,7 +11,7 @@ function createLoginMiddleware(strategy) {
       if (!user) {
         req.flash('error', info.message);
         req.flash('oldEmail', req.body.email);
-        return res.redirect('/account/signin'); // ← fix
+        return res.redirect('/signin'); // ← fix
       }
       req.logIn(user, (err) => {
         if (err) return next(err);
@@ -24,7 +24,7 @@ function createLoginMiddleware(strategy) {
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) return next();
   req.flash('error', 'Please log in to view this resource.');
-  res.redirect('/account/signin'); // ← fix
+  res.redirect('/signin'); // ← fix
 }
 module.exports = {
   login: createLoginMiddleware('local'),

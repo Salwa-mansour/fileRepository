@@ -13,8 +13,14 @@ async function findUserById(id) {
   return prisma.user.findUnique({ where: { id: Number(id) } });
 }
 
+
 async function findByEmail(email) {
-  return prisma.user.findUnique({ where: { email } });
+  console.log(email);
+  return prisma.user.findUnique({
+    where: {
+      email: email, 
+    },
+  });
 }
 
 async function comparePassword(plain, hashed) {

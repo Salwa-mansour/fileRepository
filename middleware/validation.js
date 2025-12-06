@@ -29,8 +29,7 @@ const confirmPassword = [
 
 // Creates a validation chain for a new author, including multiple fields.
 const signupValidation = [
-  ...createRequiredStringValidation('firstName', 'first name is required'),
-  ...createRequiredStringValidation('lastName', 'last name is required'),
+  ...createRequiredStringValidation('userName', 'user name is required'),
   ...createRequiredStringValidation('email', ' email is required'),
   body('email').isEmail().withMessage('Invalid email format'),
   ...passwordValidationChain,
