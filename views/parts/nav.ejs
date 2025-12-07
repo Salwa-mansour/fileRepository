@@ -1,0 +1,25 @@
+<!-- views/parts/nav.ejs -->
+
+<nav class="navbar">
+    <a href="/" class="logo">File Repo</a>
+
+    <ul>
+        <% if (isAuthenticated) { %>
+            <!-- Links for logged-in users -->
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/upload">Upload</a></li>
+            <li>
+                <!-- Logout should typically be a POST request, but a simple GET link is often used -->
+             
+                <form action="/logout" method="POST" class="logout-form">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+            <h1>wellcom <%= locals.user.userName %></h1>
+        <% } else { %>
+            <!-- Links for logged-out users -->
+            <li><a href="/signup">Sign Up</a></li>
+            <li><a href="/signin">Sign In</a></li>
+        <% } %>
+    </ul>
+</nav>

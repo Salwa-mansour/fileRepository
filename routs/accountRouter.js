@@ -21,10 +21,10 @@ accountRouter.route('/signin')
     validationMiddleware.signInValidation,
     validationMiddleware.handleValidationSignInErrors,
     auth.login,
-    (req, res) => res.redirect('/'),
+    (req, res) => res.redirect('/dashboard'),
   );
 
-accountRouter.get('/logout', accountController.logout);
+accountRouter.post('/logout', accountController.logout);
 
 accountRouter.get('/dashboard', auth.ensureAuthenticated, accountController.dashboardGet);
 
