@@ -52,10 +52,18 @@ exports.logout = (req, res, next) => {
 };
 
 // GET /dashboard
-exports.dashboardGet = (req, res) => {
-  res.render('account/dashboard', {
-    user: req.user,
-  });
+exports.dashboardGet =async (req, res) => {
+     try {
+    const userId = req.user.id;
+    const folders = await db.getFoldersByUserId(userId);
+     res.render('account/dashboard', {
+      user: req.user,
+      folders: folders
+    });
+   } catch (error) {
+      return next(err); 
+   }
+  
 };
 
 // POST /account/setMember
