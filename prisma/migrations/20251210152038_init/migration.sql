@@ -1,17 +1,29 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "session" (
+    "sid" VARCHAR NOT NULL,
+    "sess" JSON NOT NULL,
+    "expire" TIMESTAMP(6) NOT NULL,
 
-  - You are about to drop the column `createdAt` on the `User` table. All the data in the column will be lost.
+    CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+);
 
-*/
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "createdAt";
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "userName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Folder" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "path" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ispublic" BOOLEAN NOT NULL DEFAULT false,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
@@ -22,11 +34,19 @@ CREATE TABLE "File" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "path" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ispublic" BOOLEAN NOT NULL DEFAULT false,
     "folderId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE INDEX "IDX_session_expire" ON "session"("expire");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Folder" ADD CONSTRAINT "Folder_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
