@@ -10,9 +10,9 @@
     <h1>Dashboard</h1>
   <% locals.folders.forEach(folder => { %>
       <div>
-        <h2><%= folder.name %></h2>
-        <p>Created at: <%= folder.createdat %></p>
-        <a href="/folder/<% folder.id %>">details</a>
+        <h2><%= folder.folderName %></h2>
+        <p>Created at: <%= folder.createdAt %></p>
+        <a href="/folder/<%= folder.id %>">details</a>
       </div>
     <% }) %>
 </body>

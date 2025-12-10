@@ -27,8 +27,8 @@ async function comparePassword(plain, hashed) {
   return bcrypt.compare(plain, hashed);
 }
 //folder related queries
-async function findFolderByName(foldername) {
-  return prisma.folder.findUnique({ where: { foldername: foldername } });
+async function findFolderByName(folderName) {
+  return prisma.folder.findFirst({ where: { folderName: folderName } });
 }
 async function getFolderById(id) {
   return prisma.folder.findUnique({ where: { id: Number(id) } });
@@ -36,9 +36,11 @@ async function getFolderById(id) {
 async function getFilesByFolderId(folderId) {
   return prisma.file.findMany({ where: { folderId: Number(folderId) } });
 }
-async function createFolder({ foldername, ispublic, userId }) {
+async function createFolder(newFolder) {
   return prisma.folder.create({
-    data: { foldername, ispublic, userId },
+    data: {
+      ...newFolder, 
+    },
   });
 }
 

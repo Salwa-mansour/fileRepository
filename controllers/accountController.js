@@ -2,6 +2,16 @@
 const path = require('path');
 const db = require('../data/queries'); // <- uses findByEmail, findUserById, comparePassword, createUser
 
+// get home page
+exports.getHome = async (req, res) => {
+  const publicFolders = await db.getPublicFolders();
+  const allFolders = await db.getAllFolders();
+
+  const foldersToShow = req.isAuthenticated() ? allFolders : publicFolders;
+  res.render('index',{
+    folders: foldersToShow
+  });
+}
 // GET /signup
 exports.signupGet = (req, res) => {
   res.render(path.join('account', 'signup'), {
@@ -47,7 +57,7 @@ exports.signinGet = (req, res) => {
 exports.logout = (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
-    res.redirect('/signin');
+    res.redirect('/');
   });
 };
 
@@ -56,6 +66,7 @@ exports.dashboardGet =async (req, res) => {
      try {
     const userId = req.user.id;
     const folders = await db.getFoldersByUserId(userId);
+    console.log(folders);
      res.render('account/dashboard', {
       user: req.user,
       folders: folders

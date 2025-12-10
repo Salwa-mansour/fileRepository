@@ -29,13 +29,13 @@ exports.createFolderGet = (req, res) => {
 };
 // POST /create folder
 exports.createFolder = async (req, res, next) => {
-   const newFolder ={foldername:req.body.foldername,
-                     ispublic:req.body.ispublic,
+   const newFolder ={folderName:req.body.folderName,
+                     ispublic:req.body.isPublic,
                      userId:req.user.id};
   
     try {
       // use queries.js
-      const existingFolder = await db.findFolderByName(newFolder.foldername);
+      const existingFolder = await db.findFolderByName(newFolder.folderName);
   
       if (existingFolder) {
         req.flash('error', 'folder name is repeated');

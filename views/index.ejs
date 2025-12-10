@@ -8,6 +8,12 @@
 <body>
     <%- include('./parts/nav') %>
     <!-- Main content goes here -->
-    list files and folders here
+     <% locals.folders.forEach(folder => { %>
+      <div>
+        <h2><%= folder.folderName %></h2>
+        <p>Created at: <%= folder.createdAt %></p>
+        <a href="/folder/<%= folder.id %>">details</a>
+      </div>
+    <% }) %>
 </body>
 </html>

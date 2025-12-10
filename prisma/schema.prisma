@@ -23,23 +23,23 @@ model User {
   files     File[]
 }
 model Folder {
-  id        Int      @id @default(autoincrement())
-  name      String
-  path      String
-  createdAt DateTime @default(now())
-  ispublic  Boolean  @default(false)
-  userId   Int
-  user      User     @relation(fields: [userId], references: [id])
-  files     File[]
+  id              Int      @id @default(autoincrement())
+  folderName      String
+  path            String?  @default("")
+  createdAt       DateTime @default(now())
+  ispublic        Boolean  @default(false)
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  files           File[]
 }
 model File{
   id        Int      @id @default(autoincrement())
-  name      String
-  path      String
+  fileName  String
+  path      String?  @default("")
   createdAt DateTime @default(now())
   ispublic  Boolean  @default(false)
-  folderId  Int
-  folder    Folder   @relation(fields: [folderId], references: [id])    
+  folderId  Int?
+  folder    Folder?   @relation(fields: [folderId], references: [id])    
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
 }

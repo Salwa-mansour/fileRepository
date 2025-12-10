@@ -7,6 +7,9 @@ const accountController = require(path.resolve('controllers', 'accountController
 const validationMiddleware = require(path.resolve('middleware', 'validation'));
 const auth = require(path.resolve('middleware', 'auth'));
 
+accountRouter.get('/', (req, res) => {
+  accountController.getHome(req, res);
+});
 accountRouter.route('/signup')
   .get(accountController.signupGet)
   .post(
