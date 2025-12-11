@@ -7,7 +7,7 @@
         <% if (isAuthenticated) { %>
             <!-- Links for logged-in users -->
             <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/upload">Upload</a></li>
+            <li><a href="/file/create?folder=<%= locals.folderId %>">Upload file</a></li>
             <li><a href="/folder/create">new folder</a></li>
             <li>
                 <!-- Logout should typically be a POST request, but a simple GET link is often used -->

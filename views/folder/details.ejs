@@ -6,7 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    folder name ,created at 
-    files in the folder listed here
+    <%- include('../parts/nav') %>
+    <h1><%= locals.folder.folderName %> </h1>
+    <p>Created at: <%= locals.folder.createdAt %></p>
+    <h2>Files in this folder:</h2>  
+    <ul>
+        <% locals.files.forEach(file => { %>
+            <li><%= file.fileName %> - <%= file.createdAt %> </li>
+        <% }) %>
+  
 </body>
 </html>

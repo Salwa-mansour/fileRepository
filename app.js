@@ -64,6 +64,7 @@ app.use((req, res, next) => {
 
 app.use('/',require(path.join(__dirname,'routs','accountRouter')));
 app.use('/folder',require(path.join(__dirname,'routs','folderRouter')));
+app.use('/file',require(path.join(__dirname,'routs','fileRouter')));
 
  //------------------end of routes--------------
 app.use('/{*splat}', async (req, res) => {

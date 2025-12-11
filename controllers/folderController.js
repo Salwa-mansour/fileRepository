@@ -29,8 +29,10 @@ exports.createFolderGet = (req, res) => {
 };
 // POST /create folder
 exports.createFolder = async (req, res, next) => {
+    const isPublicBoolean = req.body.ispublic === "on" || req.body.ispublic === true;
+
    const newFolder ={folderName:req.body.folderName,
-                     ispublic:req.body.isPublic,
+                     ispublic:isPublicBoolean,
                      userId:req.user.id};
   
     try {
@@ -58,6 +60,7 @@ exports.folderDetailsGet = async (req, res, next) => {
       const folder = await db.getFolderById(folderId);
       const files = await db.getFilesByFolderId(folderId);
       res.render(path.join('folder', 'details'), {
+        folderId: folderId,
         folder: folder,
         files: files
       });
