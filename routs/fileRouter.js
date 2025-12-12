@@ -6,8 +6,7 @@ const fileRouter = express.Router();
 const fileController = require(path.resolve('controllers', 'fileController'));
 
 const auth = require(path.resolve('middleware', 'auth'));
-const multer  = require('multer')
-const upload = multer({ dest: 'uploads/' })
+const upload = require('../middleware/multerConfig'); // Multer configuration for file uploads
 
 fileRouter.route('/create')
   .get(auth.ensureAuthenticated,fileController.createfileGet)
