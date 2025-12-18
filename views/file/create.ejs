@@ -7,14 +7,18 @@
 </head>
 <body>
       <%- include('../parts/nav') %>
+
+      <%- include('../parts/flashMessages') %>
     <h1>uplaod file  </h1>
     <form action="./create" method="post" enctype="multipart/form-data">
-        <input type="text" name="fileName" placeholder="File Name" required />
+        <input type="text" name="fileName" placeholder="File Name" required
+         value="<%= (locals.oldInput && locals.oldInput.fileName) || '' %>" />
         <input type="file" name="file" required />
-        <label for="isPublic">Public</label>
-        <input type="checkbox" name="isPublic" id="isPublic">
+        <label for="ispublic">Public</label>
+        <input type="checkbox" name="ispublic" id="ispublic">
         <label for="folderId">Select Folder</label>
         <select name="folderId" id="folderId" value="<%= locals.folderId%>">
+            <option value=""  selected >no folder selected</option>
             <% locals.folders.forEach(folder => { %>
               <option value="<%= folder.id %>" selected = <%= folder.id == locals.folderId ? "selected" : "" %> >
                 <%= folder.folderName %>

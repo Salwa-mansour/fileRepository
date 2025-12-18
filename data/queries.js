@@ -48,10 +48,44 @@ async function getFoldersByUserId(userId) {
   return prisma.folder.findMany({ where: { userId: Number(userId) } });
 }
 async function getPublicFolders() {
+  console.log("getting public folders");
   return prisma.folder.findMany({ where: { ispublic: true } });
 }
 async function getAllFolders() {
+  console.log("getting all folders");
   return prisma.folder.findMany();
+}
+// file related functions
+async function saveFileMetadata(fileData) {
+  const folderIdValue = fileData.folderId === 'null' ? null : parseInt(fileData.folderId);
+
+  return prisma.file.create({
+    data: { fileName: fileData.fileName,
+            path: fileData.path,
+            mimetype: fileData.mimetype,
+            extension: fileData.extension,
+            ispublic: fileData.ispublic,
+            folderId: folderIdValue,
+            userId: fileData.userId
+             },
+  });
+}
+
+async function rootFilesByUserId(userId) {
+  return prisma.file.findMany({ where: { userId: Number(userId),folderId:null} })
+}
+async function getFilesByFolderId(folderId) {
+  return prisma.file.findMany({where:{folderId:Number(folderId)}})
+}
+
+async function getPublicFiles() {
+  return prisma.file.findMany({ where: { ispublic: true } })
+}
+async function getRootFiles() {
+  return prisma.file.findMany({where: { folderId: null } });
+}
+async function getPublicRootFiles(params) {
+  return prisma.file.findMany({ where: { ispublic: true, folderId: null } });
 }
 module.exports = {
   createUser,
@@ -65,4 +99,9 @@ module.exports = {
   getAllFolders,
   getFolderById,
   getFilesByFolderId,  
+  saveFileMetadata,
+  rootFilesByUserId,
+  getPublicFiles,
+  getRootFiles,
+  getPublicRootFiles
 };

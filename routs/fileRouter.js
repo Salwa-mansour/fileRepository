@@ -10,7 +10,7 @@ const upload = require('../middleware/multerConfig'); // Multer configuration fo
 
 fileRouter.route('/create')
   .get(auth.ensureAuthenticated,fileController.createfileGet)
-  .post(upload.single('file'),fileController.createfile);
+  .post(upload.fileUpload, fileController.saveFileData); 
 
 //fileRouter.route('/:id').get(auth.ensureAuthenticated, fileController.fileDetailsGet);
 

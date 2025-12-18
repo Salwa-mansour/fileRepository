@@ -15,5 +15,13 @@
         <a href="/folder/<%= folder.id %>">details</a>
       </div>
     <% }) %>
+  <% locals.files.forEach(file => { %>
+      <div>
+        <h2><%= file.fileName %></h2>
+        <p>Created at: <%= file.createdAt %></p>
+        <a href="<%= file.path %>">details</a>
+      </div>
+    <% }) %>
+  
 </body>
 </html>

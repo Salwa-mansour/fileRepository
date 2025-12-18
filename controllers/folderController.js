@@ -46,11 +46,16 @@ exports.createFolder = async (req, res, next) => {
     } catch (err) {
     return next(err); 
      }
-  
-      // create user via queries.js (you implement createUser there)
-    const folder = await db.createFolder(newFolder);
-     req.flash('info', `folder ${folder.foldername} is created successfully`);
-    return res.redirect('/dashboard');
+     
+  try {
+    // create user via queries.js (you implement createUser there)
+      const folder = await db.createFolder(newFolder);
+       req.flash('info', `folder ${folder.folderName} is created successfully`);
+       return res.redirect('/dashboard');
+    } catch (error) {
+        return next(err); 
+    }
+      
   
   }
 // GET /folder/:id details

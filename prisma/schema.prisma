@@ -36,6 +36,8 @@ model File{
   id        Int      @id @default(autoincrement())
   fileName  String
   path      String?  @default("")
+  mimetype  String
+  extension String
   createdAt DateTime @default(now())
   ispublic  Boolean  @default(false)
   folderId  Int?

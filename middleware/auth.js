@@ -9,7 +9,7 @@ function createLoginMiddleware(strategy) {
     passport.authenticate(strategy, (err, user, info) => {
       if (err) return next(err);
       if (!user) {
-        req.flash('error', info.message);
+        req.flash('error',{ msg:  info.message});
         req.flash('oldEmail', req.body.email);
         return res.redirect('/signin'); // ← fix
       }
@@ -23,7 +23,7 @@ function createLoginMiddleware(strategy) {
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) return next();
-  req.flash('error', 'Please log in to view this resource.');
+  req.flash('error', { msg: 'Please log in to view this resource.'});
   res.redirect('/signin'); // ← fix
 }
 module.exports = {

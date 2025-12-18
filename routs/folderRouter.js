@@ -11,7 +11,7 @@ folderRouter.route('/create')
   .get(auth.ensureAuthenticated,folderController.createFolderGet)
   .post(folderController.createFolder);
 
-folderRouter.route('/:id').get(auth.ensureAuthenticated, folderController.folderDetailsGet);
+folderRouter.route('/:id').get(folderController.folderDetailsGet);
 
 
 module.exports = folderRouter;

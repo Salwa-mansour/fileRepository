@@ -8,13 +8,8 @@
       <%- include('../parts/nav') %>
     <h1>Sign Up</h1>
 
-    <% if (locals.errors && locals.errors.length > 0) { %>
-      <ul style="color: red;">
-        <% locals.errors.forEach(function(error) { %>
-          <li><%= error.msg || error %></li>
-        <% }) %>
-      </ul>
-    <% } %>
+    <%- include('../parts/flashMessages') %>
+
 
     <form action="/signup" method="POST">
       <div>

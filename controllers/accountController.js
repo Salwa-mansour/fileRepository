@@ -1,15 +1,17 @@
 // controllers/accountController.js
 const path = require('path');
 const db = require('../data/queries'); // <- uses findByEmail, findUserById, comparePassword, createUser
+const { file } = require('../data/pool');
 
 // get home page
 exports.getHome = async (req, res) => {
-  const publicFolders = await db.getPublicFolders();
-  const allFolders = await db.getAllFolders();
-
-  const foldersToShow = req.isAuthenticated() ? allFolders : publicFolders;
+console.log("is authenated:",req.isAuthenticated());
+  const folders = req.isAuthenticated() ? await db.getAllFolders():await db.getPublicFolders();
+  const files =req.isAuthenticated() ? await db.getRootFiles(): await db.getPublicRootFiles();
+console.log("folders:",folders);
   res.render('index',{
-    folders: foldersToShow
+    folders: folders || [],
+    files:files || []
   });
 }
 // GET /signup
@@ -18,6 +20,7 @@ exports.signupGet = (req, res) => {
     errors: req.flash('error') || [],
     oldInput: req.body || {},
   });
+ 
 };
 
 // POST /signup
@@ -66,10 +69,12 @@ exports.dashboardGet =async (req, res) => {
      try {
     const userId = req.user.id;
     const folders = await db.getFoldersByUserId(userId);
-    console.log(folders);
+    const files = await db.rootFilesByUserId(userId);
+   
      res.render('account/dashboard', {
       user: req.user,
-      folders: folders
+      folders: folders,
+      files:files
     });
    } catch (error) {
       return next(err); 
