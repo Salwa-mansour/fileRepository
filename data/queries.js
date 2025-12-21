@@ -77,14 +77,16 @@ async function rootFilesByUserId(userId) {
 async function getFilesByFolderId(folderId) {
   return prisma.file.findMany({where:{folderId:Number(folderId)}})
 }
-
+async function getFileById(fileId) {
+  return prisma.file.findUnique({ where: { id: Number(fileId) } });
+}
 async function getPublicFiles() {
   return prisma.file.findMany({ where: { ispublic: true } })
 }
 async function getRootFiles() {
   return prisma.file.findMany({where: { folderId: null } });
 }
-async function getPublicRootFiles(params) {
+async function getPublicRootFiles() {
   return prisma.file.findMany({ where: { ispublic: true, folderId: null } });
 }
 module.exports = {
@@ -101,6 +103,7 @@ module.exports = {
   getFilesByFolderId,  
   saveFileMetadata,
   rootFilesByUserId,
+  getFileById,
   getPublicFiles,
   getRootFiles,
   getPublicRootFiles

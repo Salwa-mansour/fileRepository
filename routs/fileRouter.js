@@ -12,7 +12,7 @@ fileRouter.route('/create')
   .get(auth.ensureAuthenticated,fileController.createfileGet)
   .post(upload.fileUpload, fileController.saveFileData); 
 
-//fileRouter.route('/:id').get(auth.ensureAuthenticated, fileController.fileDetailsGet);
+fileRouter.route('/:id').get(fileController.getFileDetails);
 
 
 module.exports = fileRouter;

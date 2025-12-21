@@ -14,7 +14,6 @@ const passport = require('passport');
 const flash = require('connect-flash');
 // --------------
 
-const prisma = require('./data/pool'); 
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

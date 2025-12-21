@@ -4,7 +4,7 @@ const db = require('../data/queries');
 
 // GET /create file
 exports.createfileGet =async (req, res) => {
-    const allFolders = await db.getAllFolders();
+    const allFolders = await db.getFoldersByUserId(req.user.id);
     const currentFoldeId = req.query.folder;
 
  const data = {
@@ -20,10 +20,11 @@ exports.createfileGet =async (req, res) => {
 // POST /create file
 exports.saveFileData =async (req, res) => {
     // Prepare file data for database insertion
- 
+  const adjustedFilePath = req.file.path.replace(/^public[\\\/]/, '/') // Remove 'public/' or 'public\' at start
+                                        .replace(/\\/g, '/');         // Convert any remaining '\' to '/',  
     const fileDataForDb = {
-        fileName: req.body.fileName,  
-        path: req.file.path,       // From middleware filename function
+        fileName: req.body.fileName,
+        path: adjustedFilePath,       // From middleware filename function
         mimetype: req.file.mimetype,              // From req.file object
         extension: path.extname(req.file.originalname).toLowerCase(), // Using path module here
         ispublic: req.body.ispublic === "on" ?  true : false,
@@ -31,7 +32,7 @@ exports.saveFileData =async (req, res) => {
         userId: req.user.id  
                           // From req.file object
     };
-  
+  console.log('Received file data:', fileDataForDb);
     // **YOUR DATABASE LOGIC GOES HERE:**
     try {
         const newFile =await db.saveFileMetadata(fileDataForDb); // Hypothetical function
@@ -46,3 +47,18 @@ exports.saveFileData =async (req, res) => {
     }
  
 };
+// GET /file/:id
+exports.getFileDetails = async (req, res) => {
+    const fileId = req.params.id;
+    try {
+        const file = await db.getFileById(fileId) || {};
+        res.render(path.join('file', 'details'),
+         { file });
+
+      } catch (error) {
+        console.log(error);
+        req.flash('error', 'An error occurred while retrieving file details.');
+        return res.redirect('/dashboard');
+    }
+   
+}
