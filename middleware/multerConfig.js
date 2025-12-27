@@ -33,7 +33,7 @@ const fileFilter = (req, file, cb) => {
                         'text/plain', // .txt, .md, etc.
                         'text/markdown', // Specific MIME for .md
                         'text/x-markdown',
-                        'text/pdf'
+                        'application/pdf'
                     ];
   const allowedExts = ['.jpg', '.jpeg', '.png', '.gif','.doc','.docx','.txt','.md','.pdf','.mp4','.mp3'];
 
