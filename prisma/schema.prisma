@@ -44,4 +44,5 @@ model File{
   folder    Folder?   @relation(fields: [folderId], references: [id])    
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
+  cloudinaryId String @default("")
 }

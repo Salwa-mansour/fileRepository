@@ -66,7 +66,8 @@ async function saveFileMetadata(fileData) {
             extension: fileData.extension,
             ispublic: fileData.ispublic,
             folderId: folderIdValue,
-            userId: fileData.userId
+            userId: fileData.userId,
+            cloudinaryId: fileData.cloudinaryId
              },
   });
 }

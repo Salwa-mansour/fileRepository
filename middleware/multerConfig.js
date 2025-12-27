@@ -1,27 +1,39 @@
 const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
-const fs = require('fs'); // Import the file system module
+// const fs = require('fs'); // Import the file system module
 
+// 1. Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 // Define the absolute path to the uploads folder
 // process.cwd() ensures we get the project root, regardless of where the script is run from
-const uploadDir = path.join(process.cwd(), 'public/uploads');
+// const uploadDir = path.join(process.cwd(), 'public/uploads');
 
-// Ensure the directory exists before configuring storage
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true }); // 'recursive: true' creates parent folders if needed
-    console.log(`Created uploads directory at ${uploadDir}`);
-}
+// // Ensure the directory exists before configuring storage
+// if (!fs.existsSync(uploadDir)) {
+//     fs.mkdirSync(uploadDir, { recursive: true }); // 'recursive: true' creates parent folders if needed
+//     console.log(`Created uploads directory at ${uploadDir}`);
+// }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads/'); 
+// 2. Configure Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    // Decode Arabic filenames if necessary
+    const originalName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+    const fileName = path.parse(originalName).name;
+
+    return {
+      folder: 'fileRepo', // The folder name in your Cloudinary media library
+      public_id: fileName + '_' + Date.now(),
+      resource_type: 'auto', // Automatically detects if it's image, video, or raw (pdf/doc)
+    };
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = path.extname(file.originalname);
-    const fileName = path.parse(file.originalname).name;
-    cb(null, fileName + '_' + uniqueSuffix + fileExtension);
-  }
 });
 
 // Define the file filter function
@@ -50,15 +62,13 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Configure Multer with storage, limits, and the file filter
-const upload = multer({
+const upload = multer({ 
   storage: storage,
-  limits: { 
-    fileSize: 1 * 1024 * 1024 // 1 MB
-  },
-  fileFilter: fileFilter
+  limits: { fileSize: 5 * 1024 * 1024 }, // Cloudinary handles larger files easily; maybe 5MB
+  fileFilter: fileFilter 
 });
-
 // --- Exported Helper Middleware Function (fileUpload) ---
+
 exports.fileUpload = function(req, res, next) {
     upload.single('file')(req, res, function (err) {
         if (err) {

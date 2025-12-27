@@ -12,7 +12,11 @@
     <h2>Files in this folder:</h2>  
     <ul>
         <% locals.files.forEach(file => { %>
-            <li><%= file.fileName %> - <%= file.createdAt %> </li>
+             <div>
+                <h2><%= file.fileName %></h2>
+                <p>Created at: <%= file.createdAt %></p>
+                <a href="<%= file.path %>">details</a>
+            </div>
         <% }) %>
   
 </body>
